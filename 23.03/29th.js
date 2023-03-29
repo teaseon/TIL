@@ -86,3 +86,51 @@ function solution(park, routes) {
   }
   return answer;
 }
+
+// 문제 풀이 중, indexOf의 값이 -1일 경우 boolean 값이 false로 처리될 것으로 예상하여
+// if(park[i].indexOf('S')){
+//   answer = [i, park[i].indexOf('S')];
+// }
+// 로 조건문 내 조건을 위와 같이 구현헀으나, 로그를 통해 문제 인식하여 해결
+
+
+function solution(k) {
+  let answer = 0;
+  const numbers = {
+    0:6, 
+    1:2,
+    2:5,
+    3:5,
+    4:4,
+    5:5,
+    6:6,
+    7:3,
+    8:7, 
+    9:6
+  }; // 각 숫자별 필요한 성냥개비 개수
+  if(k <= 1){
+    return 0;
+  }
+  for(let i = 0; i < 999999991; i++){
+    const d = i.toString();
+    let res;
+    if(numbers[d]){
+      res = numbers[d];
+    } else if(numbers[d.slice(0,-1)]){
+      res = numbers[d.slice(0,-1)] + numbers[d.slice(-1)];
+    } else if(numbers[d.slice(0,-2)]){
+      res = numbers[d.slice(0,-2)] + number[d.slice(-2)];
+    } else if(numbers[d.slice(0,-3)]){
+      res = numbers[d.slice(0,-3)] + number[d.slice(-3)];
+    } else if(numbers[d.slice(0,-4)]){
+      res = numbers[d.slice(0,-4)] + number[d.slice(-4)];
+    } else if(numbers[d.slice(0,-5)]){
+      res = numbers[d.slice(0,-5)] + number[d.slice(-5)];
+    } 
+    numbers[d] = res;
+    if(res === k){
+      answer++;
+    }
+  }
+  return answer;
+}
