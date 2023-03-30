@@ -129,6 +129,57 @@
 // 다음 회차에 무조건 다이아 곡괭이를 써야하는 경우 피로도의 최소값을 구하지 못하기에,
 // 이번 회차 광물만 고려하는 것이 아닌 모든 회차의 광물을 고려하여 곡괭이 순서를 정해야 한다.
 // 이를 위해서 위 구현 방식을 접고 dfs 방식을 사용해보기로 했다.
+// function solution(picks, minerals) {
+//   const resArr = [];
+//    const dfs = (p, m, a) => {
+//       let [dia, iron, stone] = p;
+//       if(!dia && !iron && !stone){
+//           return resArr.push(a);
+//       }
+//       if(m.length === 0){
+//           return resArr.push(a);
+//       }
+//       const curMine = m.splice(0,5);
+//       let curD = 0;
+//       let curI = 0;
+//       let curS = 0;
+//       for(let m of curMine){
+//           if(m === 'diamond'){
+//               curD++;
+//           } else if(m === 'iron'){
+//               curI++;
+//           } else if(m === 'stone') {
+//               curS++;
+//           }
+//       }
+       
+//       if(dia !== 0){
+//           dfs([dia-1, iron, stone], m, a + curD + curI, curS);
+//       }
+//       if(iron !== 0){
+//           dfs([dia,iron-1,stone], m, a + curD * 5 + curI + curS);
+//       }
+//       if(stone !== 0){
+//           dfs([dia,iron,stone-1], m , a + curD * 25 + curI * 5 + curS);
+//       }
+//   }
+//    dfs(picks, minerals, 0);
+  
+//    return Math.min(...resArr)
+// }
+
+// dfs로 진행하다보니 문제가 발생했다.
+// 현재 횟수의 광물 별 갯수를 체크하는 코드에서 else를 stone으로 처리했는데,
+// 이 경우 splice로 기존 배열을 잘라오는 과정에서 문제가 발생할 수 있을 것이라 생각해 else if로 바꿔주었으나,
+// 테스트 결과 굳이 그렇게 할 필요는 없었다~
+// 그냥 else로 해도 됐겠지만, else if를 통해 확실히 어떤 분기를 해주는 지 보여주는 것이 좋은 것 같다.
+
+// 또한 해당 위 dfs 방식에서, m을 그대로 가져다 쓰다보니 한 노드를 다 돌고 난 후 다음 노드로 넘어갈 때,
+// m에 그대로 남아 문제가 발생했다.
+// 따라서 다음 노드로 넘어갈 때마다 m을 slice를 통해 복제하여 넘기는 방식으로 바꾸었다.
+
+// 결과적으로 완성된 코드는 아래와 같다.
+
 function solution(picks, minerals) {
   const resArr = [];
    const dfs = (p, m, a) => {
@@ -152,20 +203,17 @@ function solution(picks, minerals) {
               curS++;
           }
       }
-       
+  
       if(dia !== 0){
-          dfs([dia-1, iron, stone], m, a + curD + curI, curS);
+          dfs([dia-1, iron, stone], m.slice(), a + curD + curI + curS);
       }
       if(iron !== 0){
-          dfs([dia,iron-1,stone], m, a + curD * 5 + curI + curS);
+          dfs([dia,iron-1,stone], m.slice(), a + curD * 5 + curI + curS);
       }
       if(stone !== 0){
-          dfs([dia,iron,stone-1], m , a + curD * 25 + curI * 5 + curS);
+          dfs([dia,iron,stone-1], m.slice(), a + curD * 25 + curI * 5 + curS);
       }
   }
-   dfs(picks, minerals, 0);
-  
-   return Math.min(...resArr)
+  dfs(picks, minerals, 0);
+  return Math.min(...resArr);
 }
-
- 
