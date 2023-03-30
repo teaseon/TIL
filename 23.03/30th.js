@@ -129,3 +129,43 @@
 // 다음 회차에 무조건 다이아 곡괭이를 써야하는 경우 피로도의 최소값을 구하지 못하기에,
 // 이번 회차 광물만 고려하는 것이 아닌 모든 회차의 광물을 고려하여 곡괭이 순서를 정해야 한다.
 // 이를 위해서 위 구현 방식을 접고 dfs 방식을 사용해보기로 했다.
+function solution(picks, minerals) {
+  const resArr = [];
+   const dfs = (p, m, a) => {
+      let [dia, iron, stone] = p;
+      if(!dia && !iron && !stone){
+          return resArr.push(a);
+      }
+      if(m.length === 0){
+          return resArr.push(a);
+      }
+      const curMine = m.splice(0,5);
+      let curD = 0;
+      let curI = 0;
+      let curS = 0;
+      for(let m of curMine){
+          if(m === 'diamond'){
+              curD++;
+          } else if(m === 'iron'){
+              curI++;
+          } else if(m === 'stone') {
+              curS++;
+          }
+      }
+       
+      if(dia !== 0){
+          dfs([dia-1, iron, stone], m, a + curD + curI, curS);
+      }
+      if(iron !== 0){
+          dfs([dia,iron-1,stone], m, a + curD * 5 + curI + curS);
+      }
+      if(stone !== 0){
+          dfs([dia,iron,stone-1], m , a + curD * 25 + curI * 5 + curS);
+      }
+  }
+   dfs(picks, minerals, 0);
+  
+   return Math.min(...resArr)
+}
+
+ 
